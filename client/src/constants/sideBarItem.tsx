@@ -12,6 +12,6 @@ export default function sideBarItem(pathname: string) {
     { title: "comments", Icon: <CommentIcon isActive={pathname === "/comments"} />, href: "/comments" },
     { title: "messages", Icon: <MessageIcon isActive={pathname === "/messages"} />, href: "/messages" },
     { title: "statistics", Icon: <ChartIcon isActive={pathname === "/statistics"} />, href: "/statistics" },
-    { title: "payments", Icon: <CreditIcon isActive={pathname === "/payments"} />, href: "/payments" },
+    { title: "Add new user", Icon: <CreditIcon isActive={pathname === "/newUser"} />, href: "/newUser" },
   ];
 }

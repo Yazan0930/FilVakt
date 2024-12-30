@@ -20,5 +20,10 @@ export const useLoginMutation = (reset: () => void) => {
       });
       toast.success(t("loggedIn"));
     },
+    onError: (error: any) => {
+      console.log("Error: ", error);
+      const errorMessage = error.response?.data?.error || t("loginFailed");
+      toast.error(errorMessage);
+    },
   });
 };

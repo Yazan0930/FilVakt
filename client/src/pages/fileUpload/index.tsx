@@ -1,81 +1,132 @@
-import React, { useState } from 'react';
+import { Button, Form, Input, Select, SelectItem } from '@nextui-org/react';
+import React, { useRef, useState } from 'react';
+import { postCreateFile } from "../../services/api/authApi";
+import toast from "react-hot-toast";
+
 
 function FileUpload() {
-  const [file, setFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<
-    'initial' | 'uploading' | 'success' | 'fail'
-  >('initial');
+  const [pdfData, setPdfData] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const parseBase64 = (file: File) => {
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        const arrayBuffer = e.target.result as ArrayBuffer;
+        const base64String = btoa(
+          new Uint8Array(arrayBuffer)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        );
+        setPdfData(base64String);
+      }
+    };
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setStatus('initial');
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleUpload = async () => {
+    const file = e.target.files?.[0];
     if (file) {
-      setStatus('uploading');
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      try {
-        const result = await fetch('https://httpbin.org/post', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const data = await result.json();
-
-        console.log(data);
-        setStatus('success');
-      } catch (error) {
-        console.error(error);
-        setStatus('fail');
-      }
+      parseBase64(file);
     }
   };
+
+  const uploadFile = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const response = await postCreateFile(formData);
+      console.log('File uploaded successfully:', response);
+      toast.success(response.data.message);
+
+      setPdfData(null);
+    } catch (error) {
+      console.log('Error while uploading file:', error);
+      toast.error(error.response?.data?.message || error.response?.data?.error);
+    }
+  };
+
 
   return (
-    <>
-      <div className="input-group">
-        <input id="file" type="file" onChange={handleFileChange} />
+    <Form className="my-10 form-group justify-center items-center w-full space-y-4" method="post" action="/uploadPdf" onSubmit={uploadFile}>
+
+      {/* File Preview */}
+      <div className="flex flex-col gap-4 max-w-sm">
+      <label htmlFor="file">Upload PDF</label>
+        {pdfData ? (
+          <div style={{ textAlign: 'center' }}>
+            <p>Preview</p>
+            <embed
+              src={`data:application/pdf;base64,${pdfData}`}
+              width="500"
+              height="375"
+              type="application/pdf"
+            />
+          </div>
+        ) : (
+          <p>No PDF selected.</p>
+        )}
+        <Input type="hidden" value={pdfData || ''} name="pdfData" />
+        <Input
+          color="primary"
+          ref={fileInputRef}
+          id="pdfName"
+          type="file"
+          name="pdfName"
+          accept="application/pdf"
+          onChange={handleFileChange}
+          
+        />
+      
+      {/* Title Field */}
+      {/* <label htmlFor="title">Title</label>
+      <Input id="title" name="title" type="text" required /> */}
+
+      {/* File Type Field */}
+        <label htmlFor="fileType">File Type</label>
+        <Select id="fileType" name="fileType" required>
+          <SelectItem key="Info" value="Info">
+            Info
+          </SelectItem>
+          <SelectItem key="ToDo" value="ToDo">
+            ToDo
+          </SelectItem>
+        </Select>
+
+      {/* Target Role Field */}
+        {/* <Select 
+         id="targetRole"
+         name="targetRole"
+         required
+         > */}
+          <Select
+            isRequired
+            label="TargetRole"
+            labelPlacement="outside"
+            name="targetRole"
+            placeholder="Select targetRole"
+          >
+          <SelectItem key="1" value="1">
+            Workers
+          </SelectItem>
+          <SelectItem key="2" value="2">
+            Chef
+          </SelectItem>
+          <SelectItem key="3" value="3">
+            Nurs
+          </SelectItem>
+        </Select>
       </div>
-      {file && (
-        <section>
-          File details:
-          <ul>
-            <li>Name: {file.name}</li>
-            <li>Type: {file.type}</li>
-            <li>Size: {file.size} bytes</li>
-          </ul>
-        </section>
-      )}
 
-      {file && (
-        <button
-          onClick={handleUpload}
-          className="submit"
-        >Upload a file</button>
-      )}
-
-      <Result status={status} />
-    </>
+      {/* Submit Button */}
+      <div style={{ marginTop: '10px' }}>
+        <Button color="success" type="submit">
+          Upload File
+        </Button>
+      </div>
+    </Form>
   );
-};
+}
 
-const Result = ({ status }: { status: string }) => {
-  if (status === 'success') {
-    return <p>✅ File uploaded successfully!</p>;
-  } else if (status === 'fail') {
-    return <p>❌ File upload failed!</p>;
-  } else if (status === 'uploading') {
-    return <p>⏳ Uploading selected file...</p>;
-  } else {
-    return null;
-  }
-};
-
-
-export default FileUpload
+export default FileUpload;

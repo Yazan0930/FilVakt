@@ -1,8 +1,10 @@
+import AllFiles from "../../components/Templates/Home/AllFiles";
 import AreaChartBox from "../../components/Templates/Home/AreaChartBox";
 import BarChartBox from "../../components/Templates/Home/BarChartBox";
 import CurrenciesMarket from "../../components/Templates/Home/CurrenciesMarket";
 import CurrenciesMarketTable from "../../components/Templates/Home/CurrenciesMarketTable";
 import IncomeBox from "../../components/Templates/Home/IncomeBox";
+import KanbanBoard from "../../components/Templates/Home/KanbanBoard";
 import QuickTransfer from "../../components/Templates/Home/QuickTransfer";
 import TotalBalance from "../../components/Templates/Home/TotalBalance";
 import YourCards from "../../components/Templates/Home/YourCards";
@@ -13,6 +15,8 @@ export default function Home() {
   const { isSidebarExpanded } = useSidebarStore();
   return (
     <div className="mt-5 grid grid-cols-1 gap-8">
+      <KanbanBoard />
+      <AllFiles />
       <div
         className={`grid ${isSidebarExpanded ? "md:grid-cols-1" : "md:grid-cols-2"
           } mdb:grid-cols-2 xl:grid-cols-3 gap-8`}

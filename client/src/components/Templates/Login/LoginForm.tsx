@@ -20,8 +20,8 @@ export default function LoginForm() {
     reset,
   } = useForm<loginProps>({
     defaultValues: {
-      username: "mor_2314",
-      password: "83r5^_"
+      username: "yazan",
+      password: "0000"
     }
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
