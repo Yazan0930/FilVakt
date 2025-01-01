@@ -7,6 +7,7 @@ import IncomeBox from "../../components/Templates/Home/IncomeBox";
 import KanbanBoard from "../../components/Templates/Home/KanbanBoard";
 import QuickTransfer from "../../components/Templates/Home/QuickTransfer";
 import TotalBalance from "../../components/Templates/Home/TotalBalance";
+import UnReadFiles from "../../components/Templates/Home/UnReadFiles";
 import YourCards from "../../components/Templates/Home/YourCards";
 import { incomeInfo } from "../../mock/incomeInfo";
 import { useSidebarStore } from "../../stores/useSidebar";
@@ -15,6 +16,7 @@ export default function Home() {
   const { isSidebarExpanded } = useSidebarStore();
   return (
     <div className="mt-5 grid grid-cols-1 gap-8">
+      <UnReadFiles />
       <KanbanBoard />
       <AllFiles />
       <div

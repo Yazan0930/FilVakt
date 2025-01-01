@@ -9,12 +9,40 @@ export interface FileAssignment {
   ReadAt: string | null;
 }
 
+
+export const getAllUnreadFiles = async (userId: number): Promise<any[]> => {
+  const [rows]: [any[], any] = await db.execute(`
+    SELECT 
+      f.FileID,
+      f.Title,
+      f.FilePath,
+      f.FileType,
+      r.RoleName AS TargetRoleName, -- Assuming the Role table has a column 'RoleName'
+      f.CreatedAt,
+      u.Name AS CreatedByName, -- Assuming the User table has a column 'UserName'
+      fa.IsRead,
+      fa.ReadAt
+    FROM 
+      File f
+    LEFT JOIN 
+      User u ON f.CreatedBy = u.UserID
+    LEFT JOIN 
+      Role r ON f.TargetRole = r.RoleID
+    LEFT JOIN 
+      FileAssignment fa ON f.FileID = fa.FileID
+    WHERE 
+      fa.UserID = ? AND fa.IsRead = FALSE;
+  `, [userId]);
+  return rows;
+}
+
 // Function to mark a file as read by a user
 export const markFileAsRead = async (userId: number, fileId: number): Promise<any> => {
   const [rows] = await db.execute(
     'UPDATE FileAssignment SET IsRead = TRUE, ReadAt = NOW() WHERE UserID = ? AND FileID = ?',
     [userId, fileId]
   );
+  console.log('Marked file as read:', { userId, fileId });
   return rows;
 };
 
@@ -71,3 +99,4 @@ export const updateTaskStatus = async (taskId: number, status: string): Promise<
   );
   return rows;
 };
+

@@ -85,3 +85,22 @@ export const unAssignTask = async (taskId: number): Promise<void> => {
     },
   });
 }
+
+export const getAllUnreadFiles = async () => {
+  const cookie = Cookies.get("token");
+  return await axios.get(import.meta.env.VITE_API_URL + "/files/unread", {
+    headers: {
+      Authorization: `Bearer ${cookie}`,
+    },
+  });
+}
+
+export const markFileAsRead = async (fileId: number): Promise<void> => {
+  const cookie = Cookies.get("token");
+  console.log("markFileAsRead: ", fileId);
+  return await axios.post(import.meta.env.VITE_API_URL + `/files/${fileId}/read`, {}, {
+    headers: {
+      Authorization: `Bearer ${cookie}`,
+    },
+  });
+}

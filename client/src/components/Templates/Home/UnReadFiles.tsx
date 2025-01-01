@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { File } from "../../../interfaces/file.interface";
-import { getAllFiles } from "../../../services/api/authApi";
+import {
+  getAllUnreadFiles,
+  markFileAsRead,
+} from "../../../services/api/authApi";
 import MainTable from "../../Modules/Table/MainTable";
 import { format } from "date-fns"; // For date formatting
-import { Chip } from "@nextui-org/react"; // For role chip
+import { Button, Chip } from "@nextui-org/react"; // For role chip
 import PdfViewer from "../../Modules/Pdf/PdfViewer";
 import { useRefresh } from "../../../context/RefreshContext";
 
@@ -37,23 +40,51 @@ const statusColorMap: Record<
   ToDo: "danger", // Color for ToDo file type
 };
 
-function AllFiles() {
+function UnReadFiles() {
   const { refreshFlag } = useRefresh();
   const [files, setFiles] = useState<File[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch all files from the API
     const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        const filesResponse = await getAllFiles();
+        const filesResponse = await getAllUnreadFiles();
         setFiles(filesResponse.data);
-      } catch (error) {
-        console.error("Error fetching files:", error);
+      } catch (err) {
+        console.error("Error fetching files:", err);
+        setError("Failed to fetch unread files.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, [refreshFlag]);
+
+  const handleMarkAsRead = async (fileId: number) => {
+    try {
+      await markFileAsRead(fileId);
+      // Optimistically update the list
+      setFiles((prevFiles) =>
+        prevFiles.filter((file) => file.FileID !== fileId)
+      );
+    } catch (err) {
+      console.error("Error marking file as read:", err);
+      setError("Failed to mark file as read.");
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading unread files...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   const renderCell = (item: File, columnKey: React.Key) => {
     switch (columnKey) {
@@ -89,6 +120,13 @@ function AllFiles() {
         return (
           <div>
             <PdfViewer fileID={item.FileID} />
+            <Button
+              color="success"
+              size="sm"
+              onPress={() => handleMarkAsRead(item.FileID)}
+            >
+              Mark as Read
+            </Button>
           </div>
         );
       default:
@@ -100,7 +138,7 @@ function AllFiles() {
     <div className="flex-auto justify-between">
       <MainTable
         columns={columns}
-        title="All Files"
+        title="Unread Files"
         data={files.map((file) => ({
           ...file,
           id: file.FileID.toString(),
@@ -113,4 +151,4 @@ function AllFiles() {
   );
 }
 
-export default AllFiles;
+export default UnReadFiles;

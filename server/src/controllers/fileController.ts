@@ -1,12 +1,12 @@
 // src/controllers/fileController.ts
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises'; // Using fs.promises for async directory creation
 import { v4 as uuidv4 } from 'uuid'; // To generate unique filenames
 
 import { createFile, getAllFiles, getFileById } from '../models/fileModel';
-import { assignTaskToUser, markFileAsRead, getAllTasks, updateTaskStatus, unAssignTask } from '../models/fileAssignmentModel';
+import { getAllUnreadFiles, markFileAsRead } from '../models/fileAssignmentModel';
 
 //
 // Configure multer for file uploads
@@ -130,59 +130,15 @@ export const markFileAsReadHandler = async (req: Request, res: Response): Promis
   }
 };
 
-
-// Get all tasks
-export const getAllTasksHandler = async (_req: Request, res: Response): Promise<void> => {
+// Get all unread files for a user
+export const getAllUnreadFilesHandler = async (req: Request, res: Response): Promise<void> => {
+  const userId  = req.user.data.userId;
+  
   try {
-    const tasks = await getAllTasks();
-    res.status(200).json(tasks);
-  }
-  catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve tasks', message: error.message });
+    const files = await getAllUnreadFiles(Number(userId));
+    console.log('Unread files:', files);
+    res.status(200).json(files);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve unread files' });
   }
 }
-
-// Assign a task to a user
-export const assignTaskHandler = async (req: Request, res: Response): Promise<void> => {
-  const { taskId } = req.params;
-  const userId  = req.user.data.userId;
-
-  console.log('Assigning task:', { userId, taskId });
-
-  try {
-    await assignTaskToUser(Number(userId), Number(taskId));
-    res.status(200).json({ message: 'Task assigned successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to assign task', message: error.message });
-  }
-};
-
-// Unassign a task from a user
-export const unAssignTaskHandler = async (req: Request, res: Response): Promise<void> => {
-  const { taskId } = req.params;
-
-  console.log('Unassigning task:', { taskId });
-
-  try {
-    await unAssignTask(Number(taskId));
-    res.status(200).json({ message: 'Task unassigned successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to unassign task', message: error.message });
-  }
-};
-
-// Update status of task
-export const updateTaskStatusHandler = async (req: Request, res: Response): Promise<void> => {
-  const { taskId } = req.params;
-  const { status } = req.body;
-
-  console.log('Updating task status:', { taskId, status });
-
-  try {
-    await updateTaskStatus(Number(taskId), String(status));
-    console.log('Task status updated successfully');
-    res.status(200).json({ message: 'Task status updated successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update task status', message: error.message });
-  }
-};

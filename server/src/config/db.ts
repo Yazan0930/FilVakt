@@ -18,12 +18,12 @@ pool.query('SHOW DATABASES', (err, results) => {
     }
 });
 
-// Show all tables
-pool.query('SHOW TABLES', (err, results) => {
+// Show all user
+pool.query('SELECT * FROM User', (err, results) => {
     if (err) {
         console.log(err);
     } else {
-        console.log(results);
+        console.log('All users:', results);
     }
 });
 
@@ -47,7 +47,7 @@ pool.query(`
     if (err) {
         console.log(err);
     } else {
-        console.log('All users:', results);
+        console.log('All files:', results);
     }
 });
 
@@ -81,14 +81,5 @@ pool.query('SELECT * FROM FileAssignment', (err, results) => {
         console.log('All file assignments:', results);
     }
 });
-
-// delete from UserID: 12, to 13
-// pool.query('DELETE FROM File WHERE FileID=2', (err, results) => {
-//     if (err) {
-//         console.log(err);
-//     } else {
-//         console.log(results);
-//     }
-// });
 
 export default pool.promise();

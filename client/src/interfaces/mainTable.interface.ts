@@ -2,6 +2,7 @@ import { Key } from "react";
 
 interface mainTableProps {
   columns: { name: string; uid: string }[];
+  title: string;
   initialVisibleColumns: string[];
   data: {
     id: string;

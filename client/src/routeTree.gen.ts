@@ -22,7 +22,6 @@ const AuthIndexLazyImport = createFileRoute('/_auth/')()
 const UnAuthLoginLazyImport = createFileRoute('/_unAuth/login')()
 const AuthStatisticsLazyImport = createFileRoute('/_auth/statistics')()
 const AuthMessagesLazyImport = createFileRoute('/_auth/messages')()
-const AuthFileUploadLazyImport = createFileRoute('/_auth/fileUpload')()
 const AuthCommentsLazyImport = createFileRoute('/_auth/comments')()
 const AuthNewUserLazyImport = createFileRoute('/_auth/NewUser')()
 
@@ -64,14 +63,6 @@ const AuthMessagesLazyRoute = AuthMessagesLazyImport.update({
   getParentRoute: () => AuthRoute,
 } as any).lazy(() =>
   import('./routes/_auth.messages.lazy').then((d) => d.Route),
-)
-
-const AuthFileUploadLazyRoute = AuthFileUploadLazyImport.update({
-  id: '/fileUpload',
-  path: '/fileUpload',
-  getParentRoute: () => AuthRoute,
-} as any).lazy(() =>
-  import('./routes/_auth.fileUpload.lazy').then((d) => d.Route),
 )
 
 const AuthCommentsLazyRoute = AuthCommentsLazyImport.update({
@@ -120,13 +111,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCommentsLazyImport
       parentRoute: typeof AuthImport
     }
-    '/_auth/fileUpload': {
-      id: '/_auth/fileUpload'
-      path: '/fileUpload'
-      fullPath: '/fileUpload'
-      preLoaderRoute: typeof AuthFileUploadLazyImport
-      parentRoute: typeof AuthImport
-    }
     '/_auth/messages': {
       id: '/_auth/messages'
       path: '/messages'
@@ -163,7 +147,6 @@ declare module '@tanstack/react-router' {
 interface AuthRouteChildren {
   AuthNewUserLazyRoute: typeof AuthNewUserLazyRoute
   AuthCommentsLazyRoute: typeof AuthCommentsLazyRoute
-  AuthFileUploadLazyRoute: typeof AuthFileUploadLazyRoute
   AuthMessagesLazyRoute: typeof AuthMessagesLazyRoute
   AuthStatisticsLazyRoute: typeof AuthStatisticsLazyRoute
   AuthIndexLazyRoute: typeof AuthIndexLazyRoute
@@ -172,7 +155,6 @@ interface AuthRouteChildren {
 const AuthRouteChildren: AuthRouteChildren = {
   AuthNewUserLazyRoute: AuthNewUserLazyRoute,
   AuthCommentsLazyRoute: AuthCommentsLazyRoute,
-  AuthFileUploadLazyRoute: AuthFileUploadLazyRoute,
   AuthMessagesLazyRoute: AuthMessagesLazyRoute,
   AuthStatisticsLazyRoute: AuthStatisticsLazyRoute,
   AuthIndexLazyRoute: AuthIndexLazyRoute,
@@ -195,7 +177,6 @@ export interface FileRoutesByFullPath {
   '': typeof UnAuthRouteWithChildren
   '/NewUser': typeof AuthNewUserLazyRoute
   '/comments': typeof AuthCommentsLazyRoute
-  '/fileUpload': typeof AuthFileUploadLazyRoute
   '/messages': typeof AuthMessagesLazyRoute
   '/statistics': typeof AuthStatisticsLazyRoute
   '/login': typeof UnAuthLoginLazyRoute
@@ -206,7 +187,6 @@ export interface FileRoutesByTo {
   '': typeof UnAuthRouteWithChildren
   '/NewUser': typeof AuthNewUserLazyRoute
   '/comments': typeof AuthCommentsLazyRoute
-  '/fileUpload': typeof AuthFileUploadLazyRoute
   '/messages': typeof AuthMessagesLazyRoute
   '/statistics': typeof AuthStatisticsLazyRoute
   '/login': typeof UnAuthLoginLazyRoute
@@ -219,7 +199,6 @@ export interface FileRoutesById {
   '/_unAuth': typeof UnAuthRouteWithChildren
   '/_auth/NewUser': typeof AuthNewUserLazyRoute
   '/_auth/comments': typeof AuthCommentsLazyRoute
-  '/_auth/fileUpload': typeof AuthFileUploadLazyRoute
   '/_auth/messages': typeof AuthMessagesLazyRoute
   '/_auth/statistics': typeof AuthStatisticsLazyRoute
   '/_unAuth/login': typeof UnAuthLoginLazyRoute
@@ -232,7 +211,6 @@ export interface FileRouteTypes {
     | ''
     | '/NewUser'
     | '/comments'
-    | '/fileUpload'
     | '/messages'
     | '/statistics'
     | '/login'
@@ -242,7 +220,6 @@ export interface FileRouteTypes {
     | ''
     | '/NewUser'
     | '/comments'
-    | '/fileUpload'
     | '/messages'
     | '/statistics'
     | '/login'
@@ -253,7 +230,6 @@ export interface FileRouteTypes {
     | '/_unAuth'
     | '/_auth/NewUser'
     | '/_auth/comments'
-    | '/_auth/fileUpload'
     | '/_auth/messages'
     | '/_auth/statistics'
     | '/_unAuth/login'
@@ -290,7 +266,6 @@ export const routeTree = rootRoute
       "children": [
         "/_auth/NewUser",
         "/_auth/comments",
-        "/_auth/fileUpload",
         "/_auth/messages",
         "/_auth/statistics",
         "/_auth/"
@@ -308,10 +283,6 @@ export const routeTree = rootRoute
     },
     "/_auth/comments": {
       "filePath": "_auth.comments.lazy.tsx",
-      "parent": "/_auth"
-    },
-    "/_auth/fileUpload": {
-      "filePath": "_auth.fileUpload.lazy.tsx",
       "parent": "/_auth"
     },
     "/_auth/messages": {

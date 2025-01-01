@@ -22,6 +22,7 @@ import PlusIcon from "../../../assets/icons/fill/Plus";
 import { Controller, useForm } from "react-hook-form";
 import { mainTableProps } from "../../../interfaces/mainTable.interface";
 import { useTranslation } from "react-i18next";
+import UploadFile from "../AddFile/Addfile";
 
 const rowsOfPage = [
   { key: 5, label: "5" },
@@ -31,6 +32,7 @@ const rowsOfPage = [
 
 export default function MainTable({
   columns,
+  title,
   initialVisibleColumns,
   data,
   renderCell,
@@ -64,8 +66,13 @@ export default function MainTable({
     let filteredUsers = [...data];
 
     if (searchText.trim()) {
-      filteredUsers = filteredUsers.filter((currency) =>
-        currency.name.toLowerCase().includes(searchText.toLowerCase())
+      filteredUsers = filteredUsers.filter((item) =>
+        ["Title", "FileType"].some((key) =>
+          (item as Record<string, any>)[key]
+            ?.toString()
+            .toLowerCase()
+            .startsWith(searchText.trim().toLowerCase())
+        )
       );
     }
 
@@ -88,6 +95,7 @@ export default function MainTable({
   const topContent = useMemo(
     () => (
       <div className="flex flex-col gap-4">
+        <h2>{title}</h2>
         <div className="flex flex-wrap sm:flex-nowrap justify-between gap-3 items-end">
           <Controller
             name="search"
@@ -161,14 +169,12 @@ export default function MainTable({
                 </Dropdown>
               )}
             />
-            <Button color="primary" endContent={<PlusIcon />}>
-              {t("addNew")}
-            </Button>
+            <UploadFile />
           </div>
         </div>
       </div>
     ),
-    [control, t, onClear, resetField, columns]
+    [control, t, onClear, resetField, columns, title]
   );
 
   const bottomContent = useMemo(

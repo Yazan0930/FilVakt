@@ -4,7 +4,7 @@ import {
   assignTaskHandler,
   updateTaskStatusHandler,
   unAssignTaskHandler
-} from '../controllers/fileController';
+} from '../controllers/taskControler';
 import { verifyToken } from '../controllers/userController';
 
 const router = express.Router();
