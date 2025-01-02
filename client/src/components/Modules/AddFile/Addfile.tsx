@@ -37,11 +37,10 @@ function UploadFile() {
     reader.onload = (e) => {
       if (e.target?.result) {
         const arrayBuffer = e.target.result as ArrayBuffer;
+        
+        // Correct encoding to handle special characters
         const base64String = btoa(
-          new Uint8Array(arrayBuffer).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
+          String.fromCharCode(...new Uint8Array(arrayBuffer))
         );
         setPdfData(base64String);
       }
@@ -51,23 +50,24 @@ function UploadFile() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      console.log("Selected File Name:", file.name);
       parseBase64(file);
     }
   };
 
   const uploadFile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     const formData = new FormData(e.currentTarget);
-
+  
     try {
-      const response = await postCreateFile(formData);
+      const response = await postCreateFile(formData); // Adjust API call to match your backend route
       console.log("File uploaded successfully:", response);
       toast.success(response.data.message);
       setPdfData(null);
       triggerRefresh(); // Trigger the context function
     } catch (error) {
-      console.log("Error while uploading file:", error);
+      console.error("Error while uploading file:", error);
       toast.error(error.response?.data?.message || error.response?.data?.error);
     }
   };

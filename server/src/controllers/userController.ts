@@ -63,7 +63,9 @@ function generateToken(formData: any) {
     if (!ACCESS_TOKEN_SECRET) {
         throw new Error('ACCESS_TOKEN_SECRET is not defined');
     }
-    const token = jwt.sign({ data: formData }, ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+    const expiresIn = process.env.ACCESS_TOKEN_LIFE;
+    console.log("Token expires in: ", expiresIn);
+    const token = jwt.sign({ data: formData }, ACCESS_TOKEN_SECRET, { expiresIn: expiresIn });
     return token;
 }
 

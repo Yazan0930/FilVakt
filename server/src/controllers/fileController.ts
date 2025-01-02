@@ -50,38 +50,32 @@ interface MulterFile extends Express.Multer.File {
 //
 
 // Create a new file
-export const createFileHandler = [upload.single('pdfName'), async (req: Request, res: Response): Promise<void> => {
-    try {
-        const file = req.file;
-    
-        if (!file) {
-          res.status(400).json({ message: 'No file uploaded!' });
-          return;
-        }
-    
-        console.log('File received:', file);
-    } catch (error) {
-        console.error('Error while uploading file:', error instanceof Error ? error.message : error);
-        res.status(500).json({
-          message: 'Internal server error while uploading file!',
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
+export const createFileHandler = [
+  upload.single('pdfName'),
+  async (req: Request, res: Response): Promise<void> => {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ message: 'No file uploaded!' });
     }
 
-    const { fileType } = req.body;
-    const targetRole = parseInt(req.body.targetRole, 10);
-    const createdBy  = req.user.data.userId;
-    const title = req.file?.originalname;
-    const FilePath = req.file?.path;
+    try {
+      // Decode the filename properly
+      const title = Buffer.from(file.originalname, "latin1").toString("utf8");
+      console.log("Decoded file name:", title);
 
-    // console.log('File details:', { title, path, fileType, targetRole, createdBy });
-  try {
-    const result = await createFile(title, FilePath, fileType, targetRole, createdBy);
-    res.status(201).json({ message: 'File created successfully', fileId: result.insertId });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create file' });
+      const { fileType, targetRole } = req.body;
+      const createdBy = req.user.data.userId;
+      const filePath = file.path;
+
+      // Create file in the database
+      const result = await createFile(title, filePath, fileType, targetRole, createdBy);
+      res.status(201).json({ message: 'File created successfully', fileId: result.insertId });
+    } catch (error) {
+      console.error('Error while uploading file:', error instanceof Error ? error.message : error);
+      res.status(500).json({ message: 'Internal server error while uploading file!', error: error instanceof Error ? error.message : 'Unknown error' });
+    }
   }
-}];
+];
 
 // Get all files
 export const getAllFilesHandler = async (_req: Request, res: Response): Promise<void> => {

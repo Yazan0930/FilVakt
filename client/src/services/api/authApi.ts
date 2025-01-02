@@ -9,7 +9,11 @@ export const postRegisterUser = (payload: RegistrationProps) =>
   apiClient.post("/users/register", payload);
 
 export const postCreateFile = (payload: FormData) =>
-  apiClient.post("/files", payload);
+  apiClient.post("/files", payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
 export const getAllFiles = () => apiClient.get("/files");
 
