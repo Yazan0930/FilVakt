@@ -21,7 +21,7 @@ export const getAllTasksHandler = async (_req: Request, res: Response): Promise<
     console.log('Assigning task:', { userId, taskId });
   
     try {
-      await assignTaskToUser(Number(userId), Number(taskId));
+      await assignTaskToUser(userId, taskId);
       res.status(200).json({ message: 'Task assigned successfully' });
     } catch (error) {
       res.status(500).json({ error: 'Failed to assign task', message: error.message });
@@ -35,7 +35,7 @@ export const getAllTasksHandler = async (_req: Request, res: Response): Promise<
     console.log('Unassigning task:', { taskId });
   
     try {
-      await unAssignTask(Number(taskId));
+      await unAssignTask(taskId);
       res.status(200).json({ message: 'Task unassigned successfully' });
     } catch (error) {
       res.status(500).json({ error: 'Failed to unassign task', message: error.message });
@@ -50,7 +50,7 @@ export const getAllTasksHandler = async (_req: Request, res: Response): Promise<
     console.log('Updating task status:', { taskId, status });
   
     try {
-      await updateTaskStatus(Number(taskId), String(status));
+      await updateTaskStatus(taskId, status);
       console.log('Task status updated successfully');
       res.status(200).json({ message: 'Task status updated successfully' });
     } catch (error) {

@@ -39,9 +39,12 @@ function UploadFile() {
         const arrayBuffer = e.target.result as ArrayBuffer;
         
         // Correct encoding to handle special characters
-        const base64String = btoa(
-          String.fromCharCode(...new Uint8Array(arrayBuffer))
-        );
+        const uint8Array = new Uint8Array(arrayBuffer);
+        let binaryString = "";
+        for (let i = 0; i < uint8Array.length; i++) {
+          binaryString += String.fromCharCode(uint8Array[i]);
+        }
+        const base64String = btoa(binaryString);
         setPdfData(base64String);
       }
     };
@@ -58,8 +61,24 @@ function UploadFile() {
   const uploadFile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
-    const formData = new FormData(e.currentTarget);
+    // check that all required fields are filled
+    if (!pdfData) {
+      toast.error("Please select a PDF file", {
+        duration: 5000,
+      });
+      return;
+    }
   
+    const form = e.currentTarget;
+    const fileType = form.fileType.value;
+    const targetRole = form.targetRole.value;
+  
+    if (!fileType || !targetRole) {
+      toast.error("Please select a file type and target role");
+      return;
+    }
+  
+    const formData = new FormData(form);
     try {
       const response = await postCreateFile(formData); // Adjust API call to match your backend route
       console.log("File uploaded successfully:", response);
@@ -71,6 +90,7 @@ function UploadFile() {
       toast.error(error.response?.data?.message || error.response?.data?.error);
     }
   };
+  
 
   return (
     <>

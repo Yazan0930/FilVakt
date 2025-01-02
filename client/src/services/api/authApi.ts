@@ -17,21 +17,21 @@ export const postCreateFile = (payload: FormData) =>
 
 export const getAllFiles = () => apiClient.get("/files");
 
-export const getFileData = (fileId: number) =>
+export const getFileData = (fileId: string) =>
   apiClient.get(`/files/${fileId}`);
 
 export const getAllTasks = () => apiClient.get("/tasks");
 
-export const updateTaskStatus = (taskId: number, status: string) =>
+export const updateTaskStatus = (taskId: string, status: string) =>
   apiClient.post(`/tasks/${taskId}/status`, { status });
 
-export const assignTaskToUser = (taskId: number) =>
+export const assignTaskToUser = (taskId: string) =>
   apiClient.post(`/tasks/${taskId}/assign`);
 
-export const unAssignTask = (taskId: number) =>
+export const unAssignTask = (taskId: string) =>
   apiClient.post(`/tasks/${taskId}/unassign`);
 
 export const getAllUnreadFiles = () => apiClient.get("/files/unread");
 
-export const markFileAsRead = (fileId: number) =>
+export const markFileAsRead = (fileId: string) =>
   apiClient.post(`/files/${fileId}/read`);

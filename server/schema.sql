@@ -19,7 +19,7 @@ INSERT INTO Role (RoleName) VALUES
 
 -- Create the User table
 CREATE TABLE IF NOT EXISTS User (
-    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     Name VARCHAR(255) NOT NULL UNIQUE,  -- Enforce unique names
     RoleID INT,
     Password VARCHAR(255) NOT NULL,  -- Store the hashed password
@@ -32,22 +32,22 @@ INSERT INTO User (Name, RoleID, Password) VALUES
 
 -- Create the File table
 CREATE TABLE IF NOT EXISTS File (
-    FileID INT AUTO_INCREMENT PRIMARY KEY,
+    FileID CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     Title VARCHAR(255) NOT NULL,
     FilePath TEXT NOT NULL,  -- You can store file content or path to file
     FileType ENUM('Info', 'ToDo') NOT NULL,
     TargetRole INT,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CreatedBy INT,  -- Foreign Key to User (who created the file)
+    CreatedBy CHAR(36),  -- Foreign Key to User (who created the file)
     FOREIGN KEY (CreatedBy) REFERENCES User(UserID),
     FOREIGN KEY (TargetRole) REFERENCES Role(RoleID)
 );
 
 -- Create the FileAssignment table to track file assignments and read status
 CREATE TABLE IF NOT EXISTS FileAssignment (
-    AssignmentID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    FileID INT,
+    AssignmentID CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    UserID CHAR(36),
+    FileID CHAR(36),
     IsRead BOOLEAN DEFAULT FALSE,
     ReadAt TIMESTAMP NULL,
     FOREIGN KEY (UserID) REFERENCES User(UserID),
@@ -57,10 +57,10 @@ CREATE TABLE IF NOT EXISTS FileAssignment (
 
 -- Create the Task table for ToDo files
 CREATE TABLE IF NOT EXISTS Task (
-    TaskID INT AUTO_INCREMENT PRIMARY KEY,
-    FileID INT NOT NULL,
+    TaskID CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    FileID CHAR(36) NOT NULL,
     Status ENUM('To-Do', 'In Progress', 'Done') NOT NULL DEFAULT 'To-Do',
-    AssignedTo INT,
+    AssignedTo CHAR(36),
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (FileID) REFERENCES File(FileID),
     FOREIGN KEY (AssignedTo) REFERENCES User(UserID)

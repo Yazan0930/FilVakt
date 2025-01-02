@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 export default function NewUser() {
   const [password, setPassword] = React.useState("");
-  const [submitted, setSubmitted] = React.useState(null);
+  const [submitted, setSubmitted] = React.useState<null | { username: string; password: string; roleId: string }>(null);
   const [errors, setErrors] = React.useState({});
 
   // Real-time password validation
@@ -56,16 +56,12 @@ export default function NewUser() {
     // Clear errors and submit
     setErrors({});
     try {
-      const res = await postRegisterUser(data);
-      console.log(res);
+      await postRegisterUser(data);
       setSubmitted(data);
       toast.success("User created successfully");
     } catch (error) {
-      toast.error("Failed to create user");
-      console.error(error);
+      toast.error(error.response.data.error);
     }
-    console.log(res);
-    setSubmitted(data);
   };
 
   return (

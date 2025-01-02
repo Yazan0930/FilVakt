@@ -51,7 +51,8 @@ export const getAllFiles = async (): Promise<any[]> => {
   return rows;
 };
 
-export const getFileById = async (fileId: number): Promise<any | null> => {
+export const getFileById = async (fileId: string): Promise<any | null> => {
+  console.log('fileModel file data by ID:',  fileId );
   const [rows]: any = await db.execute('SELECT * FROM File WHERE FileID = ?', [fileId]);
   return rows.length ? rows[0] : null;
 };

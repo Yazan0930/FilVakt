@@ -51,7 +51,7 @@ export default function KanbanBoard() {
 
     if (!over) return;
 
-    const taskId = Number(active.id);
+    const taskId = active.id;
     const newStatus = over.id as Task["status"];
 
     setTasks((prevTasks) =>

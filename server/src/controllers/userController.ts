@@ -30,6 +30,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     else {
         console.log("User already exists");
         res.status(401).json({ error: 'User already exists' });
+        return;
     }
 };
 
@@ -76,10 +77,10 @@ export const verifyToken = (
   ): void => {
     const authHeader = req.header('Authorization');
     const token = authHeader && authHeader.split(' ')[1];
-    console.log("Token: ", token);
+    // console.log("Token: ", token);
   
     if (!token || token === 'undefined') {
-      res.status(401).json({ error: 'Token is missing or invalid' });
+      res.status(403).json({ error: 'Token is missing or invalid' });
       return; // Stop further execution
     }
     
@@ -90,7 +91,7 @@ export const verifyToken = (
   
     jwt.verify(token, ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
-        console.error('Token verification failed:', err);
+        // console.error('Token verification failed:', err);
         res.status(403).json({ message: 'Token is invalid or expired', error: err.message });
         return; // Stop further execution
       }

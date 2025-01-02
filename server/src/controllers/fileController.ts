@@ -55,7 +55,7 @@ export const createFileHandler = [
   async (req: Request, res: Response): Promise<void> => {
     const file = req.file;
     if (!file) {
-      return res.status(400).json({ message: 'No file uploaded!' });
+      res.status(400).json({ message: 'No file uploaded!' });
     }
 
     try {
@@ -93,7 +93,7 @@ export const getFileByIdHandler = async (req: Request, res: Response): Promise<v
   console.log('Getting file data by ID:', { fileId });
 
   try {
-    const file = await getFileById(Number(fileId));
+    const file = await getFileById(fileId);
     console.log('File data:', file);
     if (!file) {
       res.status(404).json({ error: 'File not found' });
@@ -107,6 +107,7 @@ export const getFileByIdHandler = async (req: Request, res: Response): Promise<v
       });
     }
   } catch (error) {
+    console.error('Error while retrieving file:', error);
     res.status(500).json({ error: 'Failed to retrieve file' });
   }
 };
@@ -117,7 +118,7 @@ export const markFileAsReadHandler = async (req: Request, res: Response): Promis
   const userId  = req.user.data.userId;
   
   try {
-    await markFileAsRead(Number(userId), Number(fileId));
+    await markFileAsRead(userId, fileId);
     res.status(200).json({ message: 'File marked as read successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to mark file as read' });
@@ -129,7 +130,7 @@ export const getAllUnreadFilesHandler = async (req: Request, res: Response): Pro
   const userId  = req.user.data.userId;
   
   try {
-    const files = await getAllUnreadFiles(Number(userId));
+    const files = await getAllUnreadFiles(userId);
     console.log('Unread files:', files);
     res.status(200).json(files);
   } catch (error) {

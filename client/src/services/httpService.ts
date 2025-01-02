@@ -28,7 +28,7 @@ apiClient.interceptors.response.use(
   (error) => {
     const status = error.response?.status;
 
-    if ((status === 401 || status === 403) && !isRedirecting) {
+    if ((status === 403) && !isRedirecting) {
       isRedirecting = true; // Set the flag to true to block further redirects
       Cookies.remove("token");
       toast.error("Session expired. Redirecting to login...");

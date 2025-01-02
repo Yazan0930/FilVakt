@@ -10,7 +10,7 @@ export interface FileAssignment {
 }
 
 
-export const getAllUnreadFiles = async (userId: number): Promise<any[]> => {
+export const getAllUnreadFiles = async (userId: string): Promise<any[]> => {
   const [rows]: [any[], any] = await db.execute(`
     SELECT 
       f.FileID,
@@ -37,7 +37,7 @@ export const getAllUnreadFiles = async (userId: number): Promise<any[]> => {
 }
 
 // Function to mark a file as read by a user
-export const markFileAsRead = async (userId: number, fileId: number): Promise<any> => {
+export const markFileAsRead = async (userId: string, fileId: string): Promise<any> => {
   const [rows] = await db.execute(
     'UPDATE FileAssignment SET IsRead = TRUE, ReadAt = NOW() WHERE UserID = ? AND FileID = ?',
     [userId, fileId]
@@ -68,7 +68,7 @@ export const getAllTasks = async (): Promise<any[]> => {
 }
 
 // Function to assign a task to a user
-export const assignTaskToUser = async (userId: number, taskId: number): Promise<any> => {
+export const assignTaskToUser = async (userId: string, taskId: string): Promise<any> => {
   // update task to assign it to the user
   const [rows] = await db.execute(
     'UPDATE Task SET AssignedTo = ? WHERE TaskID = ?',
@@ -78,7 +78,7 @@ export const assignTaskToUser = async (userId: number, taskId: number): Promise<
 };
 
 // Function to unassign a task from a user
-export const unAssignTask = async (taskId: number): Promise<any> => {
+export const unAssignTask = async (taskId: string): Promise<any> => {
   // update task to unassign it from the user
   const [rows] = await db.execute(
     'UPDATE Task SET AssignedTo = NULL WHERE TaskID = ?',
@@ -88,7 +88,7 @@ export const unAssignTask = async (taskId: number): Promise<any> => {
 };
 
 // Function to update the status of a task
-export const updateTaskStatus = async (taskId: number, status: string): Promise<any> => {
+export const updateTaskStatus = async (taskId: string, status: string): Promise<any> => {
   const validStatuses = ['To-Do', 'In Progress', 'Done']; // Add all valid statuses here
   if (!validStatuses.includes(status)) {
     throw new Error('Invalid status value');
