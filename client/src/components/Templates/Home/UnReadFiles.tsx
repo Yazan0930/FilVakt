@@ -118,11 +118,12 @@ function UnReadFiles() {
         return format(new Date(item.CreatedAt), "PPP p"); // Format date to "Dec 27, 2024 9:42 PM"
       case "actions":
         return (
-          <div>
+          <div className="inline-flex items-center gap-2">
             <PdfViewer fileID={item.FileID} />
-            <Button
+            <Button className="w-1/2 mt-2"
               color="success"
               size="sm"
+              variant="ghost"
               onPress={() => handleMarkAsRead(item.FileID)}
             >
               Mark as Read
@@ -138,7 +139,7 @@ function UnReadFiles() {
     <div className="flex-auto justify-between">
       <MainTable
         columns={columns}
-        title="Unread Files"
+        title="Your Unread Files"
         data={files.map((file) => ({
           ...file,
           id: file.FileID.toString(),

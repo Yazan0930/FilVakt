@@ -3,9 +3,10 @@ import { Column } from "./Colomn";
 import {
   Column as ColumnType,
   Task,
-} from "../../../interfaces/kanbanBoard.interface";
+} from "../../../../interfaces/kanbanBoard.interface";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { getAllTasks, updateTaskStatus } from "../../../services/api/authApi";
+import { getAllTasks, updateTaskStatus } from "../../../../services/api/authApi";
+import { useRefresh } from "../../../../context/RefreshContext";
 
 const COLUMNS: ColumnType[] = [
   { id: "To-Do", title: "To Do" },
@@ -14,13 +15,14 @@ const COLUMNS: ColumnType[] = [
 ];
 
 export default function KanbanBoard() {
+  const { refreshFlag } = useRefresh();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [refreshFlag]);
 
   const fetchTasks = async (): Promise<void> => {
     try {
@@ -100,7 +102,9 @@ export default function KanbanBoard() {
                 key={column.id}
                 column={column}
                 tasks={tasks.filter((task) => task.status === column.id)}
-                onTaskUpdate={(taskID, updateFn) => handleUpdateTask(taskID, updateFn)}
+                onTaskUpdate={(taskID, updateFn) =>
+                  handleUpdateTask(taskID, updateFn)
+                }
               />
             ))}
           </div>
@@ -108,4 +112,4 @@ export default function KanbanBoard() {
       </div>
     </div>
   );
-}  
+}

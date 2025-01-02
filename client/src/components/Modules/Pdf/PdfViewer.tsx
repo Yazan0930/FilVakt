@@ -10,21 +10,17 @@ import {
 } from "@nextui-org/react";
 import { getFileData } from "../../../services/api/authApi";
 
-export default function PdfViewer(fileId: number) {
+interface PdfViewerProps {
+  fileID: number;
+}
+
+export default function PdfViewer({ fileID }: PdfViewerProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [backdrop, setBackdrop] = React.useState("opaque");
   const [fileData, setFileData] = useState<string | null>(null);
 
-  const backdrops = ["blur"];
-
-  const handleOpen = (backdrop: string) => {
-    setBackdrop(backdrop);
-    onOpen();
-  };
-
-  const handleViewFile = async (fileId: number) => {
+  const handleOpenModal = async () => {
     try {
-      const res = await getFileData(fileId);
+      const res = await getFileData(fileID);
       console.log("File Data:", res.data); // Debugging
 
       if (res.data.base64) {
@@ -34,6 +30,8 @@ export default function PdfViewer(fileId: number) {
       } else {
         console.error("File data is missing.");
       }
+
+      onOpen(); // Open the modal only after fetching the data
     } catch (error) {
       console.error("Error viewing file:", error);
     }
@@ -41,32 +39,21 @@ export default function PdfViewer(fileId: number) {
 
   return (
     <>
-      <div className="flex flex-wrap gap-3">
-        {backdrops.map((b) => (
-          <Button
-            key={b}
-            className="capitalize mt-3 text-sm"
-            color="default"
-            variant="shadow"
-            onPress={() => handleOpen(b)}
-          >
-            Viwe
-          </Button>
-        ))}
-      </div>
-      <Modal
-        backdrop={backdrop}
-        isOpen={isOpen}
-        onClose={onClose}
-        size={'5xl'}
-        onOpen={handleViewFile(fileId.fileID)}
+      <Button
+        className="capitalize mt-3 text-sm"
+        color="default"
+        variant="shadow"
+        onPress={handleOpenModal}
       >
+        View
+      </Button>
+      <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">File</ModalHeader>
               <ModalBody>
-                <div className="w-full h-full ">
+                <div className="w-full h-full">
                   <div className="flex justify-center">
                     {fileData ? (
                       <embed

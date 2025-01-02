@@ -48,7 +48,6 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   
     const isValidPassword = await bcrypt.compare(password, user.Password);
     if (!isValidPassword) {
-      const hashedPassword = await bcrypt.hash(password, 10);
       console.log("Invalid password");
       res.status(401).json({ error: 'Invalid password' });
       return;
@@ -64,7 +63,7 @@ function generateToken(formData: any) {
     if (!ACCESS_TOKEN_SECRET) {
         throw new Error('ACCESS_TOKEN_SECRET is not defined');
     }
-    const token = jwt.sign({ data: formData }, ACCESS_TOKEN_SECRET, { expiresIn: process.env.EXPIRES_IN });
+    const token = jwt.sign({ data: formData }, ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
     return token;
 }
 
@@ -77,11 +76,11 @@ export const verifyToken = (
     const token = authHeader && authHeader.split(' ')[1];
     console.log("Token: ", token);
   
-    if (!token) {
+    if (!token || token === 'undefined') {
       res.status(401).json({ error: 'Token is missing or invalid' });
       return; // Stop further execution
     }
-  
+    
     const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     if (!ACCESS_TOKEN_SECRET) {
       throw new Error('ACCESS_TOKEN_SECRET is not defined');

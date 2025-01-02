@@ -1,9 +1,9 @@
 import { useDraggable } from "@dnd-kit/core";
-import { Task } from "../../../interfaces/kanbanBoard.interface";
-import { assignTaskToUser, unAssignTask } from "../../../services/api/authApi";
+import { Task } from "../../../../interfaces/kanbanBoard.interface";
+import { assignTaskToUser, unAssignTask } from "../../../../services/api/authApi";
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
-import PdfViewer from "../../Modules/Pdf/PdfViewer";
+import PdfViewer from "../../../Modules/Pdf/PdfViewer";
 
 type TaskCardProps = {
   task: Task;

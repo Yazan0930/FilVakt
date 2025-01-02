@@ -1,4 +1,4 @@
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { RouterProvider, createRouter, redirect } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -15,7 +15,7 @@ declare module "@tanstack/react-router" {
 
 export default function App() {
   const { i18n } = useTranslation();
-
+  
   return (
     <div dir={`${i18n.language === "fa" ? "rtl" : null}`}>
       <RouterProvider router={router} />

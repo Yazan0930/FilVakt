@@ -3,7 +3,7 @@ import { TaskCard } from "./TaskCard";
 import {
   Column as ColumnType,
   Task,
-} from "../../../interfaces/kanbanBoard.interface";
+} from "../../../../interfaces/kanbanBoard.interface";
 
 type ColumnProps = {
   column: ColumnType;
