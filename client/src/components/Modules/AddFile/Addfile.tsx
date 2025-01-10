@@ -16,8 +16,10 @@ import {
 import { postCreateFile } from "../../../services/api/authApi";
 import { useRefresh } from "../../../context/RefreshContext";
 import PlusIcon from "../../../assets/icons/fill/Plus";
+import { useTranslation } from "react-i18next";
 
 function UploadFile() {
+  const { t } = useTranslation()
   const [pdfData, setPdfData] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -101,7 +103,7 @@ function UploadFile() {
           endContent={<PlusIcon />}
           onPress={() => handleOpen(b)}
         >
-          Add New
+          {t("addNew")}
         </Button>
       ))}
 

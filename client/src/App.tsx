@@ -1,4 +1,4 @@
-import { RouterProvider, createRouter, redirect } from "@tanstack/react-router";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next";

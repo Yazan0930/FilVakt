@@ -6,6 +6,7 @@ import { format } from "date-fns"; // For date formatting
 import { Chip } from "@nextui-org/react"; // For role chip
 import PdfViewer from "../../Modules/Pdf/PdfViewer";
 import { useRefresh } from "../../../context/RefreshContext";
+import { useTranslation } from "react-i18next";
 
 const columns = [
   { name: "Title", uid: "title" },
@@ -38,6 +39,7 @@ const statusColorMap: Record<
 };
 
 function AllFiles() {
+  const { t } = useTranslation();
   const { refreshFlag } = useRefresh();
   const [files, setFiles] = useState<File[]>([]);
 
@@ -67,7 +69,7 @@ function AllFiles() {
             size="sm"
             variant="flat"
           >
-            {item.FileType}
+            {t(item.FileType)}
           </Chip>
         );
       case "uploadedBy":
@@ -100,7 +102,7 @@ function AllFiles() {
     <div className="flex-auto justify-between">
       <MainTable
         columns={columns}
-        title="All Files"
+        title={t("all_files")}
         data={files.map((file) => ({
           ...file,
           id: file.FileID.toString(),

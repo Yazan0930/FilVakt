@@ -4,6 +4,7 @@ import { assignTaskToUser, unAssignTask } from "../../../../services/api/authApi
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import PdfViewer from "../../../Modules/Pdf/PdfViewer";
+import { useTranslation } from "react-i18next";
 
 type TaskCardProps = {
   task: Task;
@@ -11,6 +12,7 @@ type TaskCardProps = {
 };
 
 export function TaskCard({ task, onTaskUpdate }: TaskCardProps) {
+  const { t } = useTranslation();
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: task.taskID.toString(),
@@ -52,11 +54,11 @@ export function TaskCard({ task, onTaskUpdate }: TaskCardProps) {
         </h3>
         <div className="mt-2 flex flex-col gap-1">
           <p className="text-xl text-neutral-400">
-            <span className="font-medium text-neutral-300">Assigned to:</span>{" "}
-            {task.assignedToName || "Unassigned"}
+            <span className="font-medium text-neutral-300">{t("assignedTo")}:</span>{" "}
+            {t(task.assignedToName || "Unassigned")}
           </p>
           <p className="text-sm text-neutral-400">
-            <span className="font-medium text-neutral-300">Updated At:</span>{" "}
+            <span className="font-medium text-neutral-300">{t("updated_at")}:</span>{" "}
             {new Date(task.updatedAt).toLocaleString()}
           </p>
         </div>
@@ -72,8 +74,8 @@ export function TaskCard({ task, onTaskUpdate }: TaskCardProps) {
           {isLoading
             ? "Processing..."
             : task.assignedTo === null
-              ? "Assign to Me"
-              : "Unassign Me"}
+              ? t("assign_me")
+              : t("unassign_me")}
         </Button>
         <PdfViewer fileID={task.fileID} />
         {error && <p className="mt-2 text-sm text-red-500">{error}</p>}

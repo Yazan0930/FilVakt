@@ -9,12 +9,14 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { getFileData } from "../../../services/api/authApi";
+import { useTranslation } from "react-i18next";
 
 interface PdfViewerProps {
-  fileID: number;
+  fileID: string;
 }
 
 export default function PdfViewer({ fileID }: PdfViewerProps) {
+  const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileData, setFileData] = useState<string | null>(null);
 
@@ -45,7 +47,7 @@ export default function PdfViewer({ fileID }: PdfViewerProps) {
         variant="shadow"
         onPress={handleOpenModal}
       >
-        View
+        {t("view")} 
       </Button>
       <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalContent>
@@ -67,7 +69,7 @@ export default function PdfViewer({ fileID }: PdfViewerProps) {
                       />
                     ) : (
                       <div className="text-center text-gray-500">
-                        No file selected for preview.
+                        {t("NO_DATA")}
                       </div>
                     )}
                   </div>
@@ -75,7 +77,7 @@ export default function PdfViewer({ fileID }: PdfViewerProps) {
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  {t("close")}
                 </Button>
               </ModalFooter>
             </>

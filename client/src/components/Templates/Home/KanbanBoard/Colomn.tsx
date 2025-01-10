@@ -4,6 +4,7 @@ import {
   Column as ColumnType,
   Task,
 } from "../../../../interfaces/kanbanBoard.interface";
+import { useTranslation } from "react-i18next";
 
 type ColumnProps = {
   column: ColumnType;
@@ -12,6 +13,7 @@ type ColumnProps = {
 };
 
 export function Column({ column, tasks, onTaskUpdate }: ColumnProps) {
+  const { t } = useTranslation();
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
   });
@@ -35,7 +37,7 @@ export function Column({ column, tasks, onTaskUpdate }: ColumnProps) {
           ))
         ) : (
           <div className="flex flex-1 items-center justify-center text-base italic text-neutral-400">
-            No tasks in this column
+            {t("no_tasks_in_column")}
           </div>
         )}
       </div>

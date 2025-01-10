@@ -1,15 +1,9 @@
-import UkFlag from "../assets/pictures/flag/ukFlag.jpg"
-import IranFlag from "../assets/pictures/flag/iranFlag.jpg"
+import SvFlag from "../assets/pictures/flag/svFlag.png";
 
 export const languages = [
     {
-        title: "English",
-        key: "en",
-        icon: UkFlag
-    },
-    {
-        title: "فارسی",
-        key: "fa",
-        icon: IranFlag
+        title: "Svenska",
+        key: "sv",
+        icon: SvFlag,
     }
 ]

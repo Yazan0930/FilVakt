@@ -9,6 +9,7 @@ import { format } from "date-fns"; // For date formatting
 import { Button, Chip } from "@nextui-org/react"; // For role chip
 import PdfViewer from "../../Modules/Pdf/PdfViewer";
 import { useRefresh } from "../../../context/RefreshContext";
+import { useTranslation } from "react-i18next";
 
 const columns = [
   { name: "Title", uid: "title" },
@@ -41,6 +42,7 @@ const statusColorMap: Record<
 };
 
 function UnReadFiles() {
+  const { t } = useTranslation();
   const { refreshFlag } = useRefresh();
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -119,14 +121,14 @@ function UnReadFiles() {
       case "actions":
         return (
           <div className="inline-flex items-center gap-2">
-            <PdfViewer fileID={item.FileID} />
+            <PdfViewer fileID={item.FileID.toString()} />
             <Button className="w-1/2 mt-2"
               color="success"
               size="sm"
               variant="ghost"
               onPress={() => handleMarkAsRead(item.FileID)}
             >
-              Mark as Read
+              {t("markAsRead")}
             </Button>
           </div>
         );
@@ -139,7 +141,7 @@ function UnReadFiles() {
     <div className="flex-auto justify-between">
       <MainTable
         columns={columns}
-        title="Your Unread Files"
+        title={t("yourUnreadFiles")}
         data={files.map((file) => ({
           ...file,
           id: file.FileID.toString(),

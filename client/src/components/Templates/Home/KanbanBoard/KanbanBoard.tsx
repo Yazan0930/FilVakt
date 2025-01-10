@@ -7,14 +7,16 @@ import {
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { getAllTasks, updateTaskStatus } from "../../../../services/api/authApi";
 import { useRefresh } from "../../../../context/RefreshContext";
+import { useTranslation } from "react-i18next";
 
 const COLUMNS: ColumnType[] = [
-  { id: "To-Do", title: "To Do" },
-  { id: "In Progress", title: "In Progress" },
+  { id: "To-Do", title: "Att göra" },
+  { id: "In Progress", title: "Pågående" },
   { id: "Done", title: "Done" },
 ];
 
 export default function KanbanBoard() {
+  const { t } = useTranslation();
   const { refreshFlag } = useRefresh();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -86,13 +88,13 @@ export default function KanbanBoard() {
   return (
     <div className="h-full rounded-4xl p-8 bg-white dark:bg-black shadow-lg dark:shadow-primaryGreen">
       <h1 className="text-center dark:text-white text-3xl font-bold text-black mb-8">
-        Kanban Board
+        {t("kanban_board")}
       </h1>
       <h2 className="text-xl dark:text-white font-semibold text-darkPrimaryBg mb-4">
-        Drag and drop tasks between columns
+        {t("drag_and_drop_to_assign")}
       </h2>
       <h2 className="text-lg dark:text-white font-medium text-darkPrimaryBg mb-8">
-        Click on a task to assign/unassign
+        {t("click_on_task_to_assign")}
       </h2>
       <div className="flex justify-center">
         <DndContext onDragEnd={handleDragEnd}>
