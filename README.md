@@ -1,7 +1,7 @@
-# Digital Document Management System for Karlskrona Kommun's Home Care Department  
+# Digital Document Management System 
 
 ## Description  
-This project involves the development of a digital document management system for the home care department of Karlskrona Kommun. The system aims to eliminate the risk of staff missing important documents, even after periods of absence. It includes a Kanban board to manage tasks, track document statuses, and ensure everyone stays updated with the latest information. By digitizing document management, the project reduces paper usage and promotes an eco-friendly and efficient work environment.  
+This project involves the development of a digital document management system for the home care department. The system aims to eliminate the risk of staff missing important documents, even after periods of absence. It includes a Kanban board to manage tasks, track document statuses, and ensure everyone stays updated with the latest information. By digitizing document management, the project reduces paper usage and promotes an eco-friendly and efficient work environment.  
 
 ## Key Benefits  
 - **Improved Document Overview and Accessibility**: Easily find and manage important documents.  
